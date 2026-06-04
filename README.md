@@ -38,4 +38,4 @@ coding!
 - Teammate name #2: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
 
    ...
-- Thanasis_Codes: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/thanasis-koufos-software-developer)
+- Thanasis_Codes: [GitHub](https://github.com/ThanasisSoftwareDeveloper/) / [LinkedIn](https://linkedin.com/in/thanasis-koufos-software-developer)
