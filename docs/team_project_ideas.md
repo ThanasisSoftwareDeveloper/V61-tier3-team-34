@@ -12,7 +12,7 @@ you like the best.
 
 | Project Idea | Description | teammate name | teammate name | teammate name | teammate name | teammate name | teammate name |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| First idea | Description | | | | | | |
+| First idea: CTF Challenge Platform | A Capture The Flag platform where users solve security puzzles (steganography, ciphers, basic web vulns in a sandbox). Includes scoring, hints, and a write-up section. | | | | | | |
 | Second idea | Description | | | | | | |
 | ... | Description | | | | | | |
 | Last idea | Description | | | | | | |
