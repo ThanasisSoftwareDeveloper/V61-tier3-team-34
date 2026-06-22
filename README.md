@@ -1,4 +1,4 @@
-# Project Name - DashFetch
+# DashFetch
 
 ---
 
@@ -10,46 +10,78 @@ Empower job seekers with fast, personalized, and effective interview preparation
 
 ### Project Vision
 
-Our vision is to make interview preparation more personalized and customized to the specific job description.  
-Candidates waste time searching for practice questions that may not even match the role they’re applying for. 
-Job descriptions contain everything needed to prepare effectively — but most people don’t know how to turn that information into targeted practice questions to help prepare for the job interview.
+Candidates waste time searching for practice questions that may not even match the role they're applying for. Job descriptions contain everything needed to prepare effectively — DashFetch turns that text into a curated set of role-specific, skill-aligned interview questions.
 
-We aim to build a smart, web-based interview-prep assistant that transforms any job description — whether from LinkedIn, a PDF, or a text file — into a curated set of role-specific, skill-aligned interview questions. 
-By analyzing the responsibilities, required skills, and seniority level of the role, the system generates tailored behavioral, technical, and situational questions that mirror what real interviewers ask.
-This tool empowers job seekers to prepare with confidence, focus on what matters, and walk into interviews ready to demonstrate the exact competencies employers are looking for.
-
+By analyzing the responsibilities, required skills, and experience level in a job description, DashFetch generates tailored behavioral, technical, and experience-based questions that mirror what real interviewers ask, including a Mock Interview mode for hands-on practice.
 
 ---
 
 ## Key Features
 
-- Ability to upload a Job Description as a simple text file or paste the Job Description directly into a text box.
-
-- Generate a list of Interview Questions based on three categories: Technical Questions, Behavioral Questions, and Experience-based Questions.
-
-- Provide a simple, clean UI to display the generated questions.
-
-- Have a 'Mock Interview' mode where the questions are asked one at a time, and possible answers are provided.
-
-- Provide the ability to download the questions
+- Upload a job description (`.txt`, `.pdf`, `.docx`) or paste it directly into a text box.
+- AI-powered extraction of structured job data (title, skills, responsibilities, experience, etc.) via Groq.
+- Generated interview questions across three categories: Technical, Behavioral, and Experience-based.
+- Job Summary screen reviewing the extracted job data before practicing.
+- Mock Interview mode — one question at a time, with a "Show Answer" reveal and STAR-method tips.
+- Fully responsive, accessible UI (desktop and mobile).
 
 ---
 
 ## Tech Stack
 
-| Layer                 | Technology        | Key Features                                                                          |
-| :-------------------- | :---------------- | :------------------------------------------------------------------------------------ |
-| **Frontend**          | **React 19**      | Component-Driven UI, Declarative State, Virtual DOM, Massive Ecosystem                |
-| **Frontend Platform** | **Netlify**       | CDN Edge Delivery, Serverless Functions, Atomic Deploys, Forms & Auth                 |
-| **Backend**           | **Node.js**       | Event Loop, Native Modules, Express, npm                                              |
-| **Backend Platform**  | **Render**        | Heroku Simplicity, AWS Power, Zero-Downtime, Micro-Services                           |
-| **Database**          | **PostgreSQL 17** | ACID Compliance, Relational Power, JSON Customization, Rock-Solid Extensibility       |
-| **Database**          | **Supabase**      | Firebase Simplicity, Postgres Power, Auto-Generated APIs, Real-Time WebSockets        |
-| **CI/CD**             | **GitHub**        | Git-Driven Versioning, Automated Actions, Unified Pull Requests, Ecosystem Governance |
-| **AI Intelligence**   | **Groq**          | LPU Architecture, Ultra-Low Latency, Deterministic Processing, Real-Time Inference    |
+| Layer            | Technology               |
+| :---------------- | :----------------------- |
+| **Framework**     | **Next.js (App Router)** — full-stack: React frontend + API routes backend |
+| **Styling**        | **Tailwind CSS**         |
+| **Database**       | **Supabase (PostgreSQL)** |
+| **AI Layer**       | **Groq**                 |
+| **Hosting**        | **Vercel**                |
+| **Testing**        | **Vitest**                |
+| **CI/CD**          | **GitHub Actions** — runs lint + tests on every Pull Request before merge/deploy |
+
+> Next.js is full-stack on its own, so frontend and backend are deployed together as a single Vercel project — no separate Netlify/Render split.
 
 ---
 
+## Getting Started
+
+```bash
+npm install
+cp .env.example .env.local   # fill in Supabase + Groq credentials
+npm run dev
+```
+
+Set up the database by running `supabase/schema.sql` in the Supabase SQL editor for your project.
+
+### Scripts
+
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Start the local dev server |
+| `npm run build` | Production build |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run the Vitest suite once |
+| `npm run test:watch` | Run Vitest in watch mode |
+
+---
+
+## Project Structure
+
+```
+app/
+  page.js                      # Home — upload/paste a job description
+  job-summary/page.js          # Extracted job data review
+  interview-questions/page.js  # Questions by category (tabs)
+  mock-interview/page.js       # One-question-at-a-time practice
+  api/
+    ingest/route.js            # Extracts + stores raw JD text
+    parse/route.js             # Groq: JD text -> structured JSON
+    generate-questions/route.js # Groq: structured JSON -> questions
+components/                    # Shared UI (Sidebar, Footer, cards, upload zone)
+lib/                           # Supabase/Groq clients, prompts, parsing, validation
+supabase/schema.sql            # Database schema (run once on a fresh project)
+test/                          # Vitest unit tests
+```
 
 ---
 
@@ -63,5 +95,3 @@ This tool empowers job seekers to prepare with confidence, focus on what matters
 | **Vanessa**       | Web Developer   |            |
 | **Simbongile**    | Web Developer   |            |
 | **Val**           | Technical Guide |            |
-
-
