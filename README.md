@@ -8,6 +8,7 @@
 [![Groq](https://img.shields.io/badge/Groq-LLM-orange?style=flat-square)](https://groq.com)
 [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-black?style=flat-square&logo=vercel)](https://vercel.com)
 [![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=flat-square&logo=github-actions&logoColor=white)](https://github.com/ThanasisSoftwareDeveloper/V61-tier3-team-34/actions)
+[![Release](https://img.shields.io/badge/Release-v0.1.0-blue?style=flat-square)](https://github.com/ThanasisSoftwareDeveloper/V61-tier3-team-34/releases/tag/v0.1.0)
 
 ---
 
@@ -28,6 +29,13 @@ Candidates waste time hunting for practice questions that don't even match the r
 
 ---
 
+## 🗓️ Voyage Timeline
+
+**Chingu Voyage V61 · Tier 3 · Team 34**
+📅 **1 June 2026 – 29 July 2026**
+
+---
+
 ## ✨ Key Features
 
 - 📂 **Upload or paste** a job description — `.txt`, `.pdf`, `.docx` supported (`.doc` intentionally excluded)
@@ -35,6 +43,7 @@ Candidates waste time hunting for practice questions that don't even match the r
 - ❓ **Generated interview questions** across three categories — Technical, Behavioral, Experience-based
 - 📋 **Job Summary screen** to review the extracted data before practicing
 - 🎤 **Mock Interview mode** — one question at a time, with a "Show Answer" reveal and STAR-method tips
+- 🎨 **Consistent UI design** — unified button styles and accessible cursor interactions across all pages
 - 📱 Fully responsive, accessible UI
 
 ---
@@ -63,16 +72,18 @@ V61-tier3-team-34/
 │   ├── job-summary/page.js            # Extracted job data review
 │   ├── interview-questions/page.js    # Questions by category (tabs)
 │   ├── mock-interview/page.js         # One-question-at-a-time practice
+│   ├── faq/page.js                    # FAQ page
 │   └── api/
 │       ├── ingest/route.js            # File text extraction only — no Groq calls
 │       ├── parse/route.js             # Groq: raw JD text -> 17-field structured JSON
-│       └── generate-questions/route.js # Groq: structured JSON -> question set
+│       └── generate-questions/route.js # Groq: structured JSON -> question set (3 separate calls per category)
 ├── components/                        # Sidebar, Footer, cards, upload zone
 ├── lib/
 │   ├── jobExtraction.js               # Groq prompt + schema for JD parsing
 │   └── questionGeneration.js          # Groq prompt for question generation
 ├── supabase/schema.sql                # Database schema (run once per project)
-├── test/                              # Vitest unit tests (23 passing)
+├── test/                              # Vitest unit tests
+├── e2e/                               # Playwright E2E tests
 └── .github/workflows/                 # CI — Vitest on every PR
 ```
 
@@ -89,7 +100,7 @@ V61-tier3-team-34/
 | **Database** | Supabase (PostgreSQL) |
 | **AI Layer** | Groq — `llama-3.1-8b-instant` |
 | **File parsing** | `pdf-parse` (PDF), `mammoth` (DOCX) |
-| **Testing** | Vitest (unit), Playwright (planned E2E) |
+| **Testing** | Vitest (unit), Playwright (E2E) |
 | **Hosting** | Vercel |
 | **CI/CD** | GitHub Actions — runs Vitest on every Pull Request |
 
@@ -120,12 +131,12 @@ cp .env.example .env.local   # fill in Supabase + Groq credentials
 ```
 
 ```
-SUPABASE_URL=
-SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
 GROQ_API_KEY=
 ```
 
-> `SUPABASE_SERVICE_ROLE_KEY` is server-only and must never be exposed in client-side code or `NEXT_PUBLIC_` variables.
+> Never commit `.env.local` — it is already in `.gitignore`. Use `.env.example` as a reference.
 
 Run `supabase/schema.sql` in the Supabase SQL editor for your project to set up the database.
 
@@ -153,9 +164,10 @@ App runs at `http://localhost:3000`.
 
 1. Open the [live app](https://v61-tier3-team-34.vercel.app) (or `http://localhost:3000` locally)
 2. Upload a job description file, or paste the text directly
-3. Review the extracted job data on the **Job Summary** screen
-4. Browse generated **Technical / Behavioral / Experience** questions
-5. Switch to **Mock Interview** mode to practice one question at a time
+3. Select the number of questions per category (up to 5)
+4. Review the extracted job data on the **Job Summary** screen
+5. Browse generated **Technical / Behavioral / Experience** questions
+6. Switch to **Mock Interview** mode to practice one question at a time
 
 > ⏳ On first use after a period of inactivity, file-upload parsing may have a short cold-start delay — this is expected Vercel free-tier behavior.
 
@@ -167,6 +179,7 @@ The Groq free tier's tokens-per-minute limit is a hard constraint the app is bui
 
 - Input text is truncated at **24,000 characters** before being sent to Groq
 - The model was switched from `llama-3.3-70b-versatile` to **`llama-3.1-8b-instant`** specifically to stay within TPM limits
+- Question generation uses **3 separate Groq calls** (one per category) to ensure the correct number of questions is returned
 
 ---
 
@@ -182,37 +195,39 @@ To handle Groq's free-tier limits and potential network hiccups, the backend imp
 
 | Check | Tool | Status |
 | --- | --- | --- |
-| Unit tests | Vitest | ✅ 23 tests passing |
+| Unit tests | Vitest | ✅ 70+ tests passing |
 | CI pipeline | GitHub Actions | ✅ runs on every Pull Request |
-| E2E tests | Playwright | 🔜 planned |
+| E2E tests | Playwright | ✅ implemented |
 
 ---
 
 ## 🗺️ Roadmap
 
-- [ ] Rate limit handling & input validation hardening
-- [ ] Session retrieval API
-- [ ] Environment variables documentation
+- [x] Rate limit handling & exponential backoff
+- [x] Environment variables documentation (.env.example)
+- [x] Consistent button styles & cursor-pointer across all pages (CT-76, CT-77)
+- [x] Question count fix — separate Groq call per category (CT-74)
+- [x] Playwright E2E test suite
+- [x] Mobile navigation accessibility fix
+- [x] FAQ section
 - [ ] Loading skeletons for Job Summary & Interview Questions pages
 - [ ] Error state UI
-- [ ] Mobile navigation fix
 - [ ] Server-side word count enforcement for PDF/DOCX uploads
-- [ ] GitHub Actions pipeline documentation
-- [ ] Playwright E2E test suite
+- [ ] Session retrieval API
 - [ ] Vercel deployment guide
 
 ---
 
 ## 👥 Meet the Team — Chingu Voyage V61, Tier 3, Team 34
 
-| Name | Role |
-| --- | --- |
-| **Roger** | Scrum Master |
-| **Thanasis** | Web Developer |
-| **Jason** | Web Developer |
-| **Vanessa** | Web Developer |
-| **Simbongile** | Web Developer |
-| **Val** | Technical Guide |
+| Name | Role | GitHub | LinkedIn |
+| --- | --- | --- | --- |
+| **Roger Banner** | Scrum Master | [RBanner](https://github.com/RBanner) | [Roger Banner](https://www.linkedin.com/in/roger-banner/) |
+| **Val Lysenko** | Technical Guide | [Valeriusdev](https://github.com/Valeriusdev) | [Valeriy Lysenko](https://www.linkedin.com/in/valeriylysenko/) |
+| **Vanessa Santos** | Web Developer | [nessa-dev](https://github.com/nessa-dev) | [Vanessa Santos](https://www.linkedin.com/in/vanessa-dev-santos/) |
+| **Simbongile Mkhotheli** | Web Developer | [simbongile-mkhotheli](https://github.com/simbongile-mkhotheli) | [Simbongile Mkhotheli](https://www.linkedin.com/in/mkoteli/) |
+| **Thanasis Koufos** | Web Developer | [ThanasisSoftwareDeveloper](https://github.com/ThanasisSoftwareDeveloper) | [Thanasis Koufos](https://www.linkedin.com/in/thanasis-koufos-software-developer/) |
+| **Jason Mui** | Web Developer | [jsnmui](https://github.com/jsnmui) | [Jason Mui](https://www.linkedin.com/in/jasonmui2026/) |
 
 Project tracked on Jira: `bannerbright.atlassian.net` (project **CT**).
 
@@ -220,7 +235,7 @@ Project tracked on Jira: `bannerbright.atlassian.net` (project **CT**).
 
 ## 📄 License
 
-Built as part of [Chingu](https://www.chingu.io) Voyage V61.
+Built as part of [Chingu](https://www.chingu.io) Voyage V61 · 1 June 2026 – 29 July 2026.
 
 ---
 
