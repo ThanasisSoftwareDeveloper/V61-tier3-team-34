@@ -77,7 +77,8 @@ The array must contain EXACTLY ${quantity} objects. Count carefully before respo
             },
           ],
           temperature: 0.6,
-          response_format: { type: "json_object" },
+          max_tokens: 4096,
+          response_format: { type: "json_object" },          
         });
         const rawContent = completion.choices?.[0]?.message?.content || "";
         const parsed = parseLLMJson(rawContent);
